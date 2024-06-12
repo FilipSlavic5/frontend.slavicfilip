@@ -1,19 +1,19 @@
 <template>
-  <div v-if="selectedFriend && selectedFriend.email" class="chat-container">
+  <div v-if="selectedFriend && selectedFriend.email" class="chat-container"> // prikazuje chat samo ako je odabran prijatelj i ima email.
     <div class="chat-header">
       <h2>Chat with {{ selectedFriend.name }}</h2>
     </div>
     <div class="message-container">
-      <div v-for="(message, index) in messages" :key="index" class="message">
+      <div v-for="(message, index) in messages" :key="index" :class="['message', {'from-current-user': message.user.email === currentUser.email, 'from-friend': message.user.email !== currentUser.email}]">
         <div class="message-content">
-          <div class="avatar-container">
+          <div class="avatar-container" :class="{'align-left': message.user.email === currentUser.email, 'align-right': message.user.email !== currentUser.email}">
             <span v-if="message.user" class="user-avatar">
               <i class="fas fa-user-circle"></i>
             </span>
           </div>
-          <div>
+          <div :class="{'align-left': message.user.email === currentUser.email, 'align-right': message.user.email !== currentUser.email}">
             <span v-if="message.user" class="username">{{ message.user.username }}</span>
-            <span>{{ message.text }}</span>
+            <span class="message-text">{{ message.text }}</span>
           </div>
         </div>
       </div>
@@ -27,6 +27,8 @@
     <p>Please select a friend to start chatting.</p>
   </div>
 </template>
+
+
 
 <script>
 import { mapState } from 'vuex';
@@ -46,7 +48,7 @@ export default {
     })
   },
   mounted() {
-    console.log('Current selected friend in Chat.vue:', this.selectedFriend);
+    console.log('Current selected friend in Chat.vue:', this.selectedFriend); // Provjerava je li odabran prijatelj i ima li email
     if (this.selectedFriend) {
       const URL = 'http://localhost:3000'; 
       console.log('Initializing WebSocket connection to:', URL);
@@ -124,6 +126,7 @@ export default {
 };
 </script>
 
+
 <style scoped>
 .chat-container {
   max-width: 600px;
@@ -131,7 +134,6 @@ export default {
   padding: 20px;
   background: #f0f0f0; 
   border-radius: 10px;
-
 }
 
 .chat-header {
@@ -152,6 +154,12 @@ export default {
 
 .message {
   margin-bottom: 10px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.from-friend {
+  justify-content: flex-end;
 }
 
 .message-content {
@@ -163,12 +171,32 @@ export default {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  margin-right: 8px;
+  margin: 0 8px;
 }
 
 .username {
   font-weight: bold;
   margin-right: 4px;
+}
+
+.align-left {
+  text-align: left;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.message-text {
+  background: #e1ffc7;
+  padding: 8px 12px;
+  border-radius: 20px;
+  max-width: 200px;
+  word-wrap: break-word;
+}
+
+.from-friend .message-text {
+  background: #f1f1f1;
 }
 
 .message-input {
@@ -201,10 +229,10 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
 }
 
-
 @media only screen and (max-width: 768px) {
   .chat-container {
     max-width: 90%; 
   }
 }
 </style>
+
