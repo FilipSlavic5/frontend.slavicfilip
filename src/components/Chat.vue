@@ -1,5 +1,5 @@
 <template>
-  <div v-if="selectedFriend && selectedFriend.email" class="chat-container"> // prikazuje chat samo ako je odabran prijatelj i ima email.
+  <div v-if="selectedFriend && selectedFriend.email" class="chat-container"> 
     <div class="chat-header">
       <h2>Chat with {{ selectedFriend.name }}</h2>
     </div>
