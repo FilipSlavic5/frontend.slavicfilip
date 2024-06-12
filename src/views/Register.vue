@@ -5,8 +5,7 @@
         <h2>Registracija</h2>
         <form @submit.prevent="handleRegister">
           <div class="form-group">
-            <label for="username">Korisničko ime:</label>
-            <input type="text" id="username" v-model="username" placeholder="Unesite korisničko ime" class="input-field" />
+            
           </div>
           <div class="form-group">
             <label for="password">Lozinka:</label>
@@ -16,6 +15,7 @@
             <label for="email">Email adresa:</label>
             <input type="email" id="email" v-model="email" placeholder="Unesite email adresu" class="input-field" />
           </div>
+          
           <button type="submit" class="submit-button">Registriraj se</button>
         </form>
       </div>
@@ -47,7 +47,6 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      username: '', 
       password: '', 
       email: '', 
       loginEmail: '',
@@ -56,12 +55,13 @@ export default {
   },
 
   methods: {
-    async handleRegister() {
+    async handleRegister() {  // Metoda koja se poziva prilikom registracije, šalje POST zahtjev na /api/register sa korisničkim podacima.
       try {
         const response = await axios.post('http://localhost:3000/api/register', {
-          username: this.username,
+    
           email: this.email,
-          password: this.password
+          password: this.password,
+         
         });
         if (response.data) {
           this.$store.dispatch('loginUser', { email: this.email, password: this.password });
